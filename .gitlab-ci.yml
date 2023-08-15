@@ -1,3 +1,5 @@
+image: node:17-alpine
+
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
@@ -8,6 +10,10 @@ stages:
   - test 
   - build 
   - deploy
+
+variables:
+  image_repository: docker.io/my-docker-id/myapp
+  image_tag: v1.0
 
 run_unit_tests:
   stage: test
@@ -33,7 +39,7 @@ build_image:
   stage: build
   script: 
     - echo "Building the docker image..."
-    - echo "Tagging the docker image..."
+    - echo "Tagging the docker image $image_repository:$image_tag"
 
 push_image:
   only:
@@ -43,12 +49,12 @@ push_image:
     - build_image
   script: 
     - echo "Logging into docker registry..."
-    - echo "Pushing docker image to registry..."
+    - echo "Pushing docker image $image_repository:$image_tag to registry..."
 
 deploy_image:
   only:
     - main
   stage: deploy 
   script: 
-    - echo "deploying the docker image to $DEPLOYMENT_ENVIRONMENT using the following configuration file - $PROPERTIES_FILE..."
+    - echo "deploying the docker image $image_repository:$image_tag to $DEPLOYMENT_ENVIRONMENT using the following configuration file - $PROPERTIES_FILE..."
     - cat $PROPERTIES_FILE
