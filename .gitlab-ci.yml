@@ -6,7 +6,7 @@ workflow:
 
 
 run_unit_test:
-  image: 20-alpine3.17
+  image: node:20-alpine3.17
   tags:
     - ec2 
     - docker
