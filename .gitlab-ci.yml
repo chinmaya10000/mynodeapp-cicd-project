@@ -4,6 +4,9 @@ workflow:
       when: never
     - when: always
 
+variables:
+  DOCKER_HOST: tcp://18.117.142.203:2375
+
 stages:
   - test 
   - build
