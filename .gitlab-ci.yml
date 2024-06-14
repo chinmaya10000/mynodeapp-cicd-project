@@ -30,7 +30,7 @@ build_image:
 push_image:
   stage: build
   script:
-    - echo "Logging into docker registry..."
+    - wrong-command "Logging into docker registry..."
     - echo "Pushing the docker image..."
 
 deploy_image:
