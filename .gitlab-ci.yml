@@ -1,6 +1,6 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH != "main"
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
     - when: always
 
@@ -28,12 +28,15 @@ run_lint_test:
     - echo "Cleaning up temporary files..."
 
 build_image:
-  stage: build
+  only:
+    - main
   script:
     - echo "Building the Docker Image..."
     - echo "Tagging the docker image..."
 
 push_image:
+  only:
+    - main
   stage: build
   needs:
     - build_image
@@ -42,6 +45,8 @@ push_image:
     - echo "Pushing the docker image..."
 
 deploy_image:
+  only:
+    - main
   stage: deploy
   script:
     - echo "Deploying new docker image to dev server..."
