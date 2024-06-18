@@ -4,6 +4,10 @@ workflow:
       when: never
     - when: always
 
+variables:
+  IMAGE_NAME: $CI_REGISTRY_IMAGE/microservice/$MICRO_SERVICE
+  IMAGE_TAG: "1.1"
+
 stages:
   - test 
   - build
@@ -32,7 +36,7 @@ build_image:
     - shell
     - remote
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:1.0 .
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
 push_image:
   stage: build
@@ -43,9 +47,6 @@ push_image:
     - shell
     - remote
   before_script:
-    - echo "Docker registry url is $CI_REGISTRY"
-    - echo "Docker registry username is $CI_REGISTRY_USER"
-    - echo "Docker registry image repo is $CI_REGISTRY_IMAGE"
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin  $CI_REGISTRY
   script:
-    - docker push $CI_REGISTRY_IMAGE:1.0
+    - docker push $IMAGE_NAME:$IMAGE_TAG
