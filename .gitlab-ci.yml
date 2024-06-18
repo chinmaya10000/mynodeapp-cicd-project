@@ -16,9 +16,10 @@ variables:
   image_tag: v1.0
 
 run_unit_tests:
+  image: node:22-alpine3.19
   tags:
     - ec2 
-    - aws 
+    - docker
     - remote
   stage: test
   before_script:
@@ -32,7 +33,7 @@ run_unit_tests:
 run_lint_test:
   tags:
     - ec2 
-    - aws 
+    - shell 
     - remote
   stage: test
   before_script:
