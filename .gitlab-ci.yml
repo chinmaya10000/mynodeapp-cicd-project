@@ -46,7 +46,7 @@ run_lint_test:
 build_image:
   tags:
     - ec2 
-    - aws 
+    - shell 
     - remote
   only:
     - main
@@ -58,7 +58,7 @@ build_image:
 push_image:
   tags:
     - ec2 
-    - aws 
+    - shell 
     - remote
   only:
     - main
@@ -72,7 +72,7 @@ push_image:
 deploy_image:
   tags:
     - ec2 
-    - aws 
+    - shell
     - remote
   only:
     - main
