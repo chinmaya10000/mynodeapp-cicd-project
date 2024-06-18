@@ -1,82 +1,17 @@
-image: alpine:3.20.0
-
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
       when: never
     - when: always
 
-stages:
-  - test 
-  - build 
-  - deploy
-
-variables:
-  image_repository: docker.io/my-docker-id/myapp
-  image_tag: v1.0
-
-run_unit_tests:
+run_unit_test:
   image: node:22-alpine3.19
   tags:
     - ec2 
     - docker
     - remote
-  stage: test
   before_script:
-    - echo "Preparing the test data..."
+    - cd app
+    - npm install
   script:
-    - echo "Running unit tests for micro service $MICRO_SERVICE_NAME..."
-    - npm version
-  after_script:
-    - echo "Cleaning up temporary files..."
-
-run_lint_test:
-  tags:
-    - ec2 
-    - shell 
-    - remote
-  stage: test
-  before_script:
-    - echo "Preparing the test data..."
-  script:
-    - echo "Running lint tests..."
-  after_script:
-    - echo "Cleaning up temporary files..."
-
-build_image:
-  tags:
-    - ec2 
-    - shell 
-    - remote
-  only:
-    - main
-  stage: build
-  script:
-    - echo "Building the Docker Image..."
-    - echo "Tagging the docker image $image_repository:$image_tag ..."
-
-push_image:
-  tags:
-    - ec2 
-    - shell 
-    - remote
-  only:
-    - main
-  stage: build
-  needs:
-    - build_image
-  script:
-    - echo "Logging into docker registry..."
-    - echo "Pushing the docker image $image_repository:$image_tag to registry..."
-
-deploy_image:
-  tags:
-    - ec2 
-    - shell
-    - remote
-  only:
-    - main
-  stage: deploy
-  script:
-    - echo "Deploying new docker image $image_repository:$image_tag to $DEPLOYMENT_ENVIRONMENT using the following configuration file $PROPERTIES_FILE ..."
-    - cat $PROPERTIES_FILE
+    - npm test
