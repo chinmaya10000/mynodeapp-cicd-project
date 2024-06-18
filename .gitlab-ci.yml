@@ -20,7 +20,6 @@ run_unit_tests:
     - ec2 
     - aws 
     - remote
-  image: node:22-alpine3.19
   stage: test
   before_script:
     - echo "Preparing the test data..."
