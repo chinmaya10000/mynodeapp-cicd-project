@@ -16,6 +16,10 @@ variables:
   image_tag: v1.0
 
 run_unit_tests:
+  tags:
+    - ec2 
+    - aws 
+    - remote
   image: node:22-alpine3.19
   stage: test
   before_script:
@@ -27,6 +31,10 @@ run_unit_tests:
     - echo "Cleaning up temporary files..."
 
 run_lint_test:
+  tags:
+    - ec2 
+    - aws 
+    - remote
   stage: test
   before_script:
     - echo "Preparing the test data..."
@@ -36,6 +44,10 @@ run_lint_test:
     - echo "Cleaning up temporary files..."
 
 build_image:
+  tags:
+    - ec2 
+    - aws 
+    - remote
   only:
     - main
   stage: build
@@ -44,6 +56,10 @@ build_image:
     - echo "Tagging the docker image $image_repository:$image_tag ..."
 
 push_image:
+  tags:
+    - ec2 
+    - aws 
+    - remote
   only:
     - main
   stage: build
@@ -54,6 +70,10 @@ push_image:
     - echo "Pushing the docker image $image_repository:$image_tag to registry..."
 
 deploy_image:
+  tags:
+    - ec2 
+    - aws 
+    - remote
   only:
     - main
   stage: deploy
