@@ -7,8 +7,8 @@ workflow:
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
-  DEV_SERVER_HOST: 35.180.46.122
-  DEV_ENDPOINT: http://ec2-35-180-46-122.eu-west-3.compute.amazonaws.com:3000
+  DEV_SERVER_HOST: 3.20.223.22
+  DEV_ENDPOINT: http://ec2-3-20-223-22.us-east-2.compute.amazonaws.com:3000
 
 stages:
   - test
