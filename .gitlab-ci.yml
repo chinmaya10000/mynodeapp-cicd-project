@@ -6,13 +6,16 @@ workflow:
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
-  DEV_SERVER_HOST: 18.191.159.112
-  DEV_ENDPOINT: http://ec2-18-191-159-112.us-east-2.compute.amazonaws.com:3000
+  DEV_SERVER_HOST: 18.216.12.91
+  DEV_ENDPOINT: http://ec2-18-216-12-91.us-east-2.compute.amazonaws.com:3000
+  STAGING_SERVER_HOST: 18.216.12.91
+  STAGING_ENDPOINT: http://ec2-18-216-12-91.us-east-2.compute.amazonaws.com:4000
 
 stages:
   - test 
   - build
-  - deploy
+  - deploy_dev
+  - deploy_staging
 
 run_unit_test:
   image: node:22-alpine3.19
@@ -73,7 +76,7 @@ push_image:
     - docker push $IMAGE_NAME:$VERSION
 
 deploy_to_dev:
-  stage: deploy
+  stage: deploy_dev
   tags:
     - ec2 
     - shell
@@ -85,9 +88,11 @@ deploy_to_dev:
     - scp -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ./docker-compose.yaml ubuntu@$DEV_SERVER_HOST:/home/ubuntu
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@$DEV_SERVER_HOST "
        echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
-
+       
+       export COMPOSE_PROJECT_NAME=dev
        export DC_IMAGE_NAME=$IMAGE_NAME &&
        export DC_IMAGE_TAG=$VERSION &&
+       export DC_APP_PORT=3000 &&
 
        docker-compose down &&
        docker-compose up -d"
@@ -95,5 +100,37 @@ deploy_to_dev:
     name: deployment 
     url: $DEV_ENDPOINT
 
+run_functional_test:
+  stage: deploy_dev
+  needs:
+    - deploy_to_dev
+  script: 
+    - echo "running functional test"
+
 include:
   - template: Jobs/SAST.gitlab-ci.yml
+
+deploy_to_staging:
+  stage: deploy_staging
+  tags:
+    - ec2 
+    - shell
+    - remote
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+    - export VERSION=$(cat version-file.txt)
+  script:
+    - scp -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ./docker-compose.yaml ubuntu@$STAGING_SERVER_HOST:/home/ubuntu
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@$STAGING_SERVER_HOST "
+       echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
+       
+       export COMPOSE_PROJECT_NAME=staging
+       export DC_IMAGE_NAME=$IMAGE_NAME &&
+       export DC_IMAGE_TAG=$VERSION &&
+       export DC_APP_PORT=4000 &&
+
+       docker-compose down &&
+       docker-compose up -d"
+  environment:
+    name: staging
+    url: $STAGING_ENDPOINT
