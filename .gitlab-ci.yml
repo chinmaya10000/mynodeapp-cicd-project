@@ -17,6 +17,10 @@ stages:
 run_unit_test:
   image: node:22-alpine3.19
   stage: test
+  cache:
+    key: $CI_COMMIT_REF_NAME
+    paths:
+      - app/node_modules/
   tags:
     - ec2 
     - remote
@@ -28,6 +32,8 @@ run_unit_test:
     - npm test
   artifacts:
     when: always
+    paths:
+      - app/junit.xml
     reports:
       junit: app/junit.xml
 
