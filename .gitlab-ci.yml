@@ -16,15 +16,24 @@ variables:
   image_tag: v1.0
 
 run_unit_tests:
-  only:
-    - main
   stage: test
   before_script:
     - echo "Preparing test data..."
   script:
     - echo "Running unit tests for micro service $MICRO_SERVICE_NAME ..."
+    - npm version
   after_script:
     - echo "Cleaning up temporary files..."
+
+run_lint_tests:
+  stage: test
+  before_script:
+    - echo "Preparing test data..."
+  script:
+    - echo "Running lint tests for micro service $MICRO_SERVICE_NAME ..."
+  after_script:
+    - echo "Cleaning up temporary files..."
+
 
 build_image:
   stage: build
