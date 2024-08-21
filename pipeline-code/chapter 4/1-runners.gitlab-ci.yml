@@ -1,4 +1,4 @@
-image: alpine:3.15.1
+image: node:22-alpine3.19
 
 workflow:
   rules:
@@ -16,11 +16,6 @@ variables:
   image_tag: v1.0
 
 run_unit_tests:
-  image: node:17-alpine3.14
-  tags:
-    - ec2
-    - docker
-    - remote
   stage: test
   before_script:
     - echo "Preparing test data..."
@@ -31,10 +26,6 @@ run_unit_tests:
     - echo "Cleaning up temporary files..."
 
 run_lint_tests:
-  tags:
-    - ec2
-    - shell
-    - remote
   stage: test
   before_script:
     - echo "Preparing test data..."
@@ -44,9 +35,6 @@ run_lint_tests:
     - echo "Cleaning up temporary files..."    
 
 build_image:
-  tags:
-    - macos
-    - local
   only:
     - main
   stage: build
@@ -55,9 +43,6 @@ build_image:
     - echo "Tagging the docker image $image_repository:$image_tag "
   
 push_image:
-  tags:
-    - macos
-    - local
   only:
     - main
   stage: build
@@ -68,9 +53,6 @@ push_image:
     - echo "Pushing docker image $image_repository:$image_tag to registry..."
 
 deploy_image:
-  tags:
-    - macos
-    - local
   only:
     - main
   stage: deploy
