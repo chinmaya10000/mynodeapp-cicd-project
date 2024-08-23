@@ -26,6 +26,8 @@ run_unit_test:
     - npm test
   artifacts:
     when: always
+    paths:
+      - app/junit.xml
     reports:
       junit: app/junit.xml
 
