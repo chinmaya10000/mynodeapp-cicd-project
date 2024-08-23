@@ -13,6 +13,7 @@ variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
   IMAGE_TAG: "1.0"
   DEV_SERVER_HOST: 3.132.212.183
+  DEV_ENDPOINT: http://ec2-3-132-212-183.us-east-2.compute.amazonaws.com:3000
 
 run_unit_test:
   stage: test
@@ -67,3 +68,7 @@ deploy_to_dev:
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@$DEV_SERVER_HOST "
         echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
         docker run -d -p 3000:3000 $IMAGE_NAME:$IMAGE_TAG"
+  environment:
+    name: development
+    url: $DEV_ENDPOINT
+  
