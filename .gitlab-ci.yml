@@ -7,10 +7,12 @@ workflow:
 stages:
   - test 
   - build
+  - deploy
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
   IMAGE_TAG: "1.0"
+  DEV_SERVER_HOST: 3.132.212.183
 
 run_unit_test:
   stage: test
@@ -52,3 +54,16 @@ push_image:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script: 
     - docker push $IMAGE_NAME:$IMAGE_TAG
+
+deploy_to_dev:
+  stage: deploy 
+  tags:
+    - ec2 
+    - shell 
+    - remote
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@$DEV_SERVER_HOST "
+        echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
+        docker run -d -p 3000:3000 $IMAGE_NAME:$IMAGE_TAG"
