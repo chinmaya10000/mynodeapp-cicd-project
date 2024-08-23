@@ -40,6 +40,8 @@ build_image:
 
 push_image:
   stage: build 
+  needs:
+    - build_image
   tags:
     - ec2 
     - shell 
