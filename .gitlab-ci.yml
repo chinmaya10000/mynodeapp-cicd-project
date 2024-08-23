@@ -4,7 +4,16 @@ workflow:
       when: never
     - when: always
 
+stages:
+  - test 
+  - build
+
+variables:
+  IMAGE_NAME: $CI_REGISTRY_IMAGE
+  IMAGE_TAG: "1.0"
+
 run_unit_test:
+  stage: test
   image: node:22-alpine3.19
   tags:
     - ec2 
@@ -19,3 +28,23 @@ run_unit_test:
     when: always
     reports:
       junit: app/junit.xml
+
+build_image:
+  stage: build 
+  tags:
+    - ec2 
+    - shell 
+    - remote 
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+
+push_image:
+  stage: build 
+  tags:
+    - ec2 
+    - shell 
+    - remote 
+  before_script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script: 
+    - docker push $IMAGE_NAME:$IMAGE_TAG
