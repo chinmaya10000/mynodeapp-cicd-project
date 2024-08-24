@@ -18,7 +18,9 @@ run_unit_test:
   stage: test
   image: node:22-alpine3.19
   cache:
-    
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - app/node_modules
   tags:
     - ec2 
     - docker
