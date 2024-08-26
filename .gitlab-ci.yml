@@ -11,8 +11,8 @@ stages:
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
-  DEV_SERVER_HOST: 18.222.124.68
-  DEV_ENDPOINT: http://ec2-18-222-124-68.us-east-2.compute.amazonaws.com:3000
+  DEV_SERVER_HOST: 3.15.164.215
+  DEV_ENDPOINT: http://ec2-3-15-164-215.us-east-2.compute.amazonaws.com:3000
 
 run_unit_test:
   stage: test
@@ -36,6 +36,9 @@ run_unit_test:
       - app/junit.xml
     reports:
       junit: app/junit.xml
+
+sast:
+  stage: test
 
 build_image:
   stage: build 
@@ -91,4 +94,7 @@ deploy_to_dev:
   environment:
     name: development
     url: $DEV_ENDPOINT
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
   
