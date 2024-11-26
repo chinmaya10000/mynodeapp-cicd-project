@@ -27,5 +27,6 @@ docker run -p 8080:8080 -p 50000:50000 -d \
 - Run SonarQube as a docker container and access in browser
 ```
 docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+---
 publicip:9000
 ```
