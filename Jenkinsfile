@@ -48,6 +48,24 @@ pipeline {
                 }
             }
         }
+
+        stage('Run NJSScan') {
+            steps {
+                script {
+                    echo 'Running njsscan to check for security issues in JavaScript code...'
+                    docker.image('python:3.9').inside {
+                        dir('app') {
+                            sh '''
+                                # Ensure the PATH includes the user-specific binary directory
+                                export PATH=$PATH:~/.local/bin
+                                pip3 install --upgrade --user njsscan
+                                njsscan --exit-warning . --sarif -o njsscan.sarif || true
+                            '''
+                        }
+                    }
+                }
+            }
+        }
         stage('Run Semgrep') {
             steps {
                 script {
