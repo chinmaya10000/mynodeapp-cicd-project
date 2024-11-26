@@ -24,15 +24,8 @@ pipeline {
         stage('Secret Scanning with Gitleaks') {
             steps {
                 script {
-                    try {
-                        // Run Gitleaks scan
-                        sh 'gitleaks detect --source=. -v --report-path=gitleaks-report.json'
-                        echo "Gitleaks scan completed successfully"
-                    }
-                    catch (Exception e) {
-                        echo "Gitleaks scan failed: ${e.message}"
-                        error("Gitleaks scanning stage failed")
-                    }
+                    echo 'Run Gitleaks scan'
+                    sh 'gitleaks detect --source=. -v --report-path=gitleaks-report.json'
                 }
             }
         }
