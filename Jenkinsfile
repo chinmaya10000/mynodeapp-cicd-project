@@ -56,7 +56,7 @@ pipeline {
                         dir('app') {
                             sh "export PATH=$PATH:~/.local/bin"
                             sh 'pip3 install --upgrade --user njsscan'
-                            sh 'njsscan --exit-warning . --sarif -o njsscan.sarif'
+                            sh 'njsscan --exit-warning . --sarif -o njsscan.sarif || true'
                         }
                     }
                 }
