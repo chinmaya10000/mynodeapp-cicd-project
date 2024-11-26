@@ -66,9 +66,14 @@ pipeline {
                     echo 'Running Retire.js to check for outdated libraries and security issues...'
                     docker.image('node:18-bullseye').inside {
                         dir('app') {
-                            sh 'npm install -g retire --prefix ./retire_env'
-                            sh "export PATH=$PATH:./retire_env/bin"
-                            sh 'retire --path . --outputformat json --outputpath retire.json || true'
+                            sh '''
+                                # Install RetireJS in a custom directory
+                                npm install -g retire --prefix ./retire_env
+                        
+                                # Add the custom directory to PATH and run RetireJS
+                                export PATH=$PATH:./retire_env/bin
+                                retire --path . --outputformat json --outputpath retire.json || true
+                            '''
                         }
                     }
                 }
