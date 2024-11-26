@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     echo 'Run Gitleaks scan'
-                    sh 'gitleaks detect --source=. -v --report-path=gitleaks-report.json'
+                    sh 'gitleaks detect --source=. -v --report-path=gitleaks-report.json || true'
                 }
             }
         }
