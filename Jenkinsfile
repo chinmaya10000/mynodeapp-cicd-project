@@ -54,7 +54,8 @@ pipeline {
                     echo 'Running njsscan to check for security issues in JavaScript code...'
                     docker.image('python:3.9').inside {
                         dir('app') {
-                            sh 'pip3 install --upgrade njsscan'
+                            sh "export PATH=$PATH:~/.local/bin"
+                            sh 'pip3 install --upgrade --user njsscan'
                             sh 'njsscan --exit-warning . --sarif -o njsscan.sarif'
                         }
                     }

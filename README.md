@@ -48,5 +48,6 @@ publicip:8080
   - OWASP Dependency-Check
   - NodeJs
   - SonarQube Scanner
+  - Docker Pipeline
   - Pipeline: Stage View
 
