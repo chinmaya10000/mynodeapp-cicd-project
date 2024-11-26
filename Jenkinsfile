@@ -6,7 +6,6 @@ pipeline {
     }
 
     environment {
-        SCANNER_HOME=tool 'sonar-scanner'
         IMAGE_NAME = 'chinmayapradhan/node-app'
         IMAGE_TAG = "1.0-${BUILD_NUMBER}"
         SEMGREP_RULES = 'p/javascript'
