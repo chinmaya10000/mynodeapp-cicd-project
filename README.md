@@ -1,17 +1,13 @@
-#### This project is for the Jenkins CI/CD 
+#### Node.js Application with CI/CD Pipeline
 
-##### Test
-The project uses jest library for tests. (see "test" script in package.json)
-There is 1 test (server.test.js) in the project that checks whether the main index.html file exists in the project. 
+This repository contains a Node.js application along with a Jenkins CI/CD pipeline to automate the process from code checkout to deployment.
 
-To run the nodejs test:
+## Setup Instructions:
 
-    npm run test
-
-Make sure to download jest library before running test, otherwise jest command defined in package.json won't be found.
-
-    npm install
-
-In order to see failing test, remove index.html or rename it and run tests.
+### 1. Server Provisioning
+- I am using AWS as the Cloud Provider
+- Provision an EC2 instance on AWS with a secure Linux distribution (e.g., Amazon Linux 2023).
+- Configure security groups to allow necessary incoming traffic and restrict unnecessary access.
+- Generate and configure SSH key pairs for secure remote acces.
 
 
