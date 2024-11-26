@@ -24,6 +24,14 @@ docker run -p 8080:8080 -p 50000:50000 -d \
                     -v /var/run/docker.sock:/var/run/docker.sock \
                     -v $(which docker):/usr/bin/docker jenkins/jenkins:lts
 ```
+- Go to Inside Jenkins Container as a root user
+```
+docker exec -u 0 -it <container-id> bash
+```
+- Give the permission to /var/run/docker.sock
+```
+chmod 666 /var/run/docker.sock
+```
 - Run SonarQube as a docker container and access in browser
 ```
 docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
@@ -37,6 +45,8 @@ publicip:8080
 ```
 - Install Necessary Plugins in Jenkins:
 - <b>Go to Jenkins Master and click on <mark> Manage Jenkins --> Plugins --> Available plugins</mark> install the below plugins:</b>
-  - OWASP
+  - OWASP Dependency-Check
+  - NodeJs
   - SonarQube Scanner
   - Pipeline: Stage View
+
