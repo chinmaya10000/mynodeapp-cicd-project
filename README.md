@@ -30,3 +30,13 @@ docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
 ---
 publicip:9000
 ```
+### 3. Access Jenkins in web browser using publicip of your EC2 instance. Install some plugin and configure in Global tool configuration
+- Access Jenkins
+```
+publicip:8080
+```
+- Install Necessary Plugins in Jenkins:
+- <b>Go to Jenkins Master and click on <mark> Manage Jenkins --> Plugins --> Available plugins</mark> install the below plugins:</b>
+  - OWASP
+  - SonarQube Scanner
+  - Pipeline: Stage View
