@@ -149,6 +149,15 @@ The pipeline uses the following environment variables:
 
 ---
 
+## Pipeline
+### 1. Jenkins Pipeline Execution 
+![Jenkins Pipeline](assets/pipeline.gif)
+
+### 2. Running Docker Container on EC2
+![Docker Container Running](assets/container.gif)
+
+---
+
 ## Troubleshooting
 
 1. **Pipeline Fails in Gitleaks**:
