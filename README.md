@@ -1,6 +1,6 @@
 # Node.js Application with CI/CD Pipeline
 
-This repository contains a Node.js application along with a Jenkins CI/CD pipeline to automate the process from code checkout to deployment.
+This repository contains a Jenkins pipeline configuration for automating the CI/CD process of a Node.js application. The pipeline includes various stages such as code quality analysis, security scanning, Docker image building, and deployment to a staging server.
 
 ## Setup Instructions:
 
