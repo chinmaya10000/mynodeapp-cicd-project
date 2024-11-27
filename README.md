@@ -103,7 +103,7 @@ The pipeline uses the following environment variables:
 
 ### Quality Gate Check
 - **Description**: Waits for SonarQube quality gate results.
-- **Timeout**: 1 hour.
+- **Timeout**: 15 Minute.
 
 ### Run Semgrep
 - **Description**: Scans the codebase for vulnerabilities using Semgrep.
