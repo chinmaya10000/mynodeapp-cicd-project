@@ -43,11 +43,13 @@ publicip:9000
 ```
 publicip:8080
 ```
-## Prerequisites
+## Install and configure plugin
 
 - Jenkins installed with required plugins:
   - **Pipeline**
+  - **nodeJS**
   - **Git**
+  - **Docker Pipeline**
   - **SonarQube Scanner**
   - **Slack Notification**
   - **SSH Agent**
