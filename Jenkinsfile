@@ -125,9 +125,6 @@ pipeline {
             }
         }
         stage('Deploy to Staging') {
-            when {
-                branch 'main'
-            }
             steps {
                 script {
                     echo 'Deploying Docker container to the staging server...'
