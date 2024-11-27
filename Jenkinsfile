@@ -132,6 +132,12 @@ pipeline {
             }
         }
         stage('Deploy to Staging') {
+            when {
+                expression {
+                    // Ensure it's the 'main' branch and the commit is a merge commit
+                    return BRANCH_NAME == 'main' && isMergeCommit()
+                }
+            }
             environment {
                 DOCKER_CREDS = credentials('docker-cred')
             }
