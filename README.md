@@ -1,4 +1,4 @@
-#### Node.js Application with CI/CD Pipeline
+# Node.js Application with CI/CD Pipeline
 
 This repository contains a Node.js application along with a Jenkins CI/CD pipeline to automate the process from code checkout to deployment.
 
