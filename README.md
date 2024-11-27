@@ -43,12 +43,23 @@ publicip:9000
 ```
 publicip:8080
 ```
-- Install Necessary Plugins in Jenkins:
-- <b>Go to Jenkins Master and click on <mark> Manage Jenkins --> Plugins --> Available plugins</mark> install the below plugins:</b>
-  - OWASP Dependency-Check
-  - NodeJs
-  - SonarQube Scanner
-  - Docker Pipeline
-  - Pipeline: Stage View
-  - SSH Agent
+## Prerequisites
+
+- Jenkins installed with required plugins:
+  - **Pipeline**
+  - **Git**
+  - **SonarQube Scanner**
+  - **Slack Notification**
+  - **SSH Agent**
+- Access to the following tools:
+  - Docker
+  - Node.js
+  - Git
+  - SonarQube server
+  - Slack webhook
+- Credentials setup in Jenkins:
+  - **Docker Registry**: `docker-cred`
+  - **Staging Server**: `staging-server-credentials`
+- A staging server with Docker and Docker Compose installed.
+- SSH access to the staging server.
 
