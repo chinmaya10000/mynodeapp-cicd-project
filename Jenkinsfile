@@ -10,6 +10,7 @@ pipeline {
         IMAGE_TAG = "1.0-${BUILD_NUMBER}"
         SCANNER_HOME = tool 'sonar-scanner'
         SEMGREP_RULES = 'p/javascript'
+        SLACK_CHANNEL = '#node-app'
     }
 
     stages {
@@ -21,12 +22,18 @@ pipeline {
                 }
             }
         }
-
         stage('Secret Scanning with Gitleaks') {
             steps {
                 script {
-                    echo 'Run Gitleaks scan'
-                    sh 'gitleaks detect --source=. -v --report-path=gitleaks-report.json || true'
+                    try {
+                        // Run Gitleaks scan
+                        sh 'gitleaks detect --source=. -v --report-path=gitleaks-report.json'
+                        echo "Gitleaks scan completed successfully"
+                    }
+                    catch (Exception e) {
+                        echo "Gitleaks scan failed: ${e.message}"
+                        error("Gitleaks scanning stage failed")
+                    }
                 }
             }
         }
@@ -91,7 +98,7 @@ pipeline {
                         
                                 # Add the custom directory to PATH and run RetireJS
                                 export PATH=$PATH:./retire_env/bin
-                                retire --path . --outputformat json --outputpath retire.json || true
+                                retire --path . --outputformat json --outputpath retire.json
                             '''
                         }
                     }
@@ -110,7 +117,7 @@ pipeline {
             steps {
                 script {
                     echo 'Scan image with trivy...'
-                    sh "trivy image -f json -o trivy.json --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG} || true"
+                    sh "trivy image -f json -o trivy.json --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
@@ -141,6 +148,14 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        success {
+            slackSend(channel: "${env.SLACK_CHANNEL}", message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) completed successfully.")
+        }
+        failure {
+            slackSend(channel: "${env.SLACK_CHANNEL}", message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed.")
         }
     }
 }
