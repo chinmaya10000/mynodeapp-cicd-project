@@ -114,5 +114,15 @@ pipeline {
                 }
             }
         }
+        stage('Push Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
     }
 }
