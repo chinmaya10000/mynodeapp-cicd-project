@@ -50,4 +50,5 @@ publicip:8080
   - SonarQube Scanner
   - Docker Pipeline
   - Pipeline: Stage View
+  - SSH Agent
 

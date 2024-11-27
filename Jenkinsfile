@@ -110,7 +110,7 @@ pipeline {
             steps {
                 script {
                     echo 'Scan image with trivy...'
-                    sh "trivy image -f json -o trivy.json --severity CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG} || true"
+                    sh "trivy image -f json -o trivy.json --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG} || true"
                 }
             }
         }
@@ -120,6 +120,21 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+        stage('Deploy to Staging') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    echo 'Deploying Docker container to the staging server...'
+                    def dockerCmd = "docker run -d -p 3001:3000 ${IMAGE_NAME}:${IMAGE_TAG}"
+
+                    sshagent(['staging-server-credentials']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.129.42.205 ${dockerCmd}"
                     }
                 }
             }
