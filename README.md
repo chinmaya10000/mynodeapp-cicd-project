@@ -127,10 +127,11 @@ The pipeline uses the following environment variables:
 - **Description**: Pushes the Docker image to the registry.
 
 ### Deploy to Staging
-- **Description**: Deploys the Docker container to a staging server.
+- **Description**:  Deploys the Docker container to a staging server after a successful merge to the main branch.
+- **Trigger**: This stage runs only when there is a merge commit to the main branch.
 - **Commands**:
   - Copies deployment files to the server.
-  - Executes a shell script to deploy the application.
+  - Executes a shell script to deploy the application on the staging server.
 
 ---
 
