@@ -98,5 +98,21 @@ pipeline {
                 }
             }
         }
+        stage('Build Image') {
+            steps {
+                script {
+                    echo 'building the docker image...'
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                }
+            }
+        }
+        stage('Image Security Scan') {
+            steps {
+                script {
+                    echo 'Scan image with trivy...'
+                    sh "trivy image -f json -o trivy.json --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
     }
 }
