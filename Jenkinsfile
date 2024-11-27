@@ -8,6 +8,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'chinmayapradhan/node-app'
         IMAGE_TAG = "1.0-${BUILD_NUMBER}"
+        SCANNER_HOME = tool 'sonar-scanner'
         SEMGREP_RULES = 'p/javascript'
     }
 
@@ -48,19 +49,20 @@ pipeline {
                 }
             }
         }
-
-        stage('Run NJSScan') {
+        stage('SonarQube Analysis (SAST)') {
             steps {
                 script {
-                    echo 'Running njsscan to check for security issues in JavaScript code...'
-                    docker.image('python:3.9').inside {
-                        dir('app') {
-                            sh '''
-                                pip3 install --upgrade pip
-                                pip3 install --no-cache-dir njsscan
-                                njsscan --exit-warning . --sarif -o njsscan.sarif || true
-                            '''
-                        }
+                    withSonarQubeEnv('sonar-server') {
+                        sh "$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=mynodeapp-cicd -Dsonar.projectName=mynodeapp-cicd"
+                    }
+                }
+            }
+        }
+        stage('Quality Gate Check') {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: false
                     }
                 }
             }
@@ -77,7 +79,7 @@ pipeline {
                 }
             }
         }
-        stage('Run Retire.js') {
+        stage('Run Retire.js(SCA)') {
             steps {
                 script {
                     echo 'Running Retire.js to check for outdated libraries and security issues...'
