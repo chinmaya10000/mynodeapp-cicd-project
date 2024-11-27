@@ -128,10 +128,13 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying Docker container to the staging server...'
-                    def dockerCmd = "docker run -d -p 3001:3000 ${IMAGE_NAME}:${IMAGE_TAG}"
+                    def shellCmd = "bash ./server-cmds.sh"
+                    def ec2Instance = 'ec2-user@3.129.42.205'
 
                     sshagent(['staging-server-credentials']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.129.42.205 ${dockerCmd}"
+                        scp "scp -o StrictHostKeyChecking=no server-cmds.sh ${ec2Instance}:/home/ec2-user"
+                        scp "scp -o StrictHostKeyChecking=no docker-compose.yaml ${ec2Instance}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
                     }
                 }
             }
